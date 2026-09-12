@@ -1,0 +1,9 @@
+# .htaccess
+# Permette a PHP di recuperare l'header Authorization
+# contenente il token JWT inviato dal client.
+
+RewriteEngine On
+
+# Copia l'header Authorization nella variabile HTTP_AUTHORIZATION,
+# rendendolo disponibile tramite $_SERVER['HTTP_AUTHORIZATION'] in PHP.
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

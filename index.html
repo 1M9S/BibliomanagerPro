@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiblioManager Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-card">
+            <h1 class="auth-brand"> BiblioManager Pro</h1>
+            <h2 id="auth-title">Accedi</h2>
+
+            <!-- form di LOGIN -->
+            <form id="form-login">
+                <input type="text" id="login-username" placeholder="Username" required autocomplete="username">
+                <input type="password" id="login-password" placeholder="Password" required
+                    autocomplete="current-password">
+                <button type="submit" class="btn-primary">Accedi</button>
+            </form>
+
+            <!-- form di REGISTRAZIONE (nascosto di default) -->
+            <form id="form-register" style="display:none;">
+                <input type="text" id="reg-username" placeholder="Scegli uno username" required minlength="3"
+                    autocomplete="username">
+                <input type="password" id="reg-password" placeholder="Scegli una password (min 6)" required
+                    minlength="6" autocomplete="new-password">
+                <button type="submit" class="btn-secondary">Crea account</button>
+            </form>
+
+            <!-- messaggio di errore dell'autenticazione -->
+            <p id="auth-error" class="auth-error"></p>
+
+            <!-- collegamenti per passare tra login e registrazione -->
+            <p class="auth-switch">
+                <a href="#" onclick="mostraFormRegister(); return false;">Non hai un account? Registrati</a>
+                <a href="#" onclick="mostraFormLogin(); return false;">Hai già un account? Accedi</a>
+            </p>
+        </div>
+    </div>
+
+    <!--  APPLICAZIONE (visibile solo dopo il login)-->
+    <div id="app" style="display:none;">
+
+        <header>
+            <h1>Biblioteca Digitale</h1>
+            <!-- barra utente: nome dell'utente loggato + logout -->
+            <div class="user-bar">
+                <span><strong id="utente-corrente"></strong></span>
+                <button class="btn-logout" onclick="logout()">Esci</button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <aside class="sidebar">
+
+                <div class="panel">
+                    <h3>Filtra per Autore</h3>
+                    <select id="filtro-autore" onchange="caricaLibri()">
+                        <option value="">-- Tutti i Libri --</option>
+                    </select>
+                </div>
+
+                <div class="panel">
+                    <h3>Gestione Autori</h3>
+                    <form id="form-autore">
+                        <input type="text" id="new-nome" placeholder="Nome" required>
+                        <input type="text" id="new-cognome" placeholder="Cognome" required>
+                        <button type="submit" class="btn-secondary">Crea Autore</button>
+                    </form>
+
+                    <hr>
+                    <p style="font-size:0.9em; color:#666;">Lista Autori:</p>
+                    <ul id="lista-autori-gestione" class="author-list"></ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Nuovo Libro</h3>
+                    <form id="form-libro">
+                        <input type="text" id="titolo" placeholder="Titolo opera" required>
+                        <input type="number" id="anno" placeholder="Anno" required>
+                        <select id="select-autori" required>
+                            <option value="">Seleziona Autore...</option>
+                        </select>
+                        <button type="submit" class="btn-primary">Salva Libro</button>
+                    </form>
+                </div>
+            </aside>
+
+            <main class="content">
+                <div id="lista-libri" class="grid-container"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- notifica temporanea (toast) -->
+    <div id="toast" class="toast">Notifica</div>
+
+    <!-- modale di modifica libro -->
+    <div id="modal-edit" class="modal">
+        <div class="modal-content">
+            <!-- pulsante di chiusura-->
+            <span class="close-btn" onclick="chiudiModale()" title="Chiudi">&times;</span>
+            <h2>Modifica Libro</h2>
+            <form id="form-edit">
+                <input type="hidden" id="edit-id">
+                <label>Titolo:</label>
+                <input type="text" id="edit-titolo" required>
+                <label>Anno:</label>
+                <input type="number" id="edit-anno" required>
+                <label>Autore:</label>
+                <select id="edit-autore-id" required></select>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="chiudiModale()">Annulla</button>
+                    <button type="submit" class="btn-primary">Salva Modifiche</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- script (l'ordine conta: utils - auth - authors - books) -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/authors.js"></script>
+    <script src="js/books.js"></script>
+
+    <script>
+        // all'avvio verifichiamo se esiste già una sessione attiva:
+        // se sì mostriamo l'app, altrimenti la schermata di login.
+        document.addEventListener('DOMContentLoaded', verificaSessione);
+    </script>
+</body>
+
+</html>
